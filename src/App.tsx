@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+import PostContainer from './Components/PostContainer'
+import { useAppDispatch } from './Hooks/useAppDispatch'
+import { useAppSelector } from './Hooks/useAppSelector'
+import { fetchUsersAsync } from './Store/reducers/user/user.actions'
 
-function App() {
+const App = () => {
+   const dispatch = useAppDispatch()
+   const { users, isLoading, error} = useAppSelector(state => state.userState)
+   useEffect(() => {
+      dispatch(fetchUsersAsync())
+   }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <PostContainer/>
+      {isLoading && <h1>Loading...</h1>}
+      {error && <h1>{error}</h1>}
+      {JSON.stringify(users, null, 2)}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
